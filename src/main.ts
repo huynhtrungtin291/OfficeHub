@@ -9,6 +9,7 @@ declare global {
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   await app.listen(process.env.PORT ?? 3000);
+  console.log(`Server is running on http://localhost:${process.env.PORT ?? 3000}`);
 
   // Đổi từ module.hot sang import.meta.webpackHot
   if (import.meta.webpackHot) {
