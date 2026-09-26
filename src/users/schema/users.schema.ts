@@ -29,8 +29,7 @@ export class User {
     default: 'employee',
   })
   role: string;
-
-  @Prop({ required: true, trim: true, maxlength: 100 })
+  @Prop({ type: 'ObjectId', ref: 'Department' })
   department: string;
 
   @Prop({ required: true, trim: true, maxlength: 100 })
@@ -44,5 +43,8 @@ export class User {
     default: 'offline',
   })
   status: string;
+
+  @Prop({ type: String, default: null, select: false })
+  refreshToken?: string | null;
 }
 export const UserSchema = SchemaFactory.createForClass(User);
