@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { ConflictException } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 
 import { CreateUserDto } from './dto/create.users.dto.js';
 import { User } from './schema/users.schema.js';
-import { ConflictException } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
+import { UpdatePasswordDto } from './dto/update.password.dto.js';
 
 
 @Injectable()
@@ -59,4 +60,33 @@ export class UsersService {
   async isPsswordValid(password: string, hashedPassword: string): Promise<boolean> {
     return bcrypt.compare(password, hashedPassword);
   }
+
+  async updateRefreshToken(userId: string, refreshToken: string): Promise<void> {
+    const hashedRefreshToken = refreshToken ? await bcrypt.hash(refreshToken, 10) : null;
+    await this.userModel.findByIdAndUpdate(userId, { refreshToken: hashedRefreshToken });
+  }
+
+  async checkRefreshToken(email: string, refreshToken: string): Promise<boolean> {
+    console.log('email', email);
+    const user = await this.userModel.findOne({ email }).select('+refreshToken').exec();  
+    console.log('user', user);
+    if (!user || !user.refreshToken) {
+      return false;
+    }
+    return bcrypt.compare(refreshToken, user.refreshToken);
+  }
+
+  async updateUserPassword(updatePasswordDto: UpdatePasswordDto): Promise<void> {
+    const user = await this.userModel.findOne({ email: updatePasswordDto.email }).select('+password').exec();
+    if (!user) {
+      throw new Error('Người dùng không tồn tại');
+    }
+    const isMatch = await bcrypt.compare(updatePasswordDto.oldPassword, user.password);
+    if (!isMatch) {
+      throw new Error('Mật khẩu cũ không chính xác');
+    }
+    const hashedNewPassword = await bcrypt.hash(updatePasswordDto.newPassword, 10);
+    await this.userModel.findByIdAndUpdate(user._id, { password: hashedNewPassword });
+  }
+
 }
