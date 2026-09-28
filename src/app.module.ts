@@ -7,6 +7,8 @@ import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
 import { UsersModule } from './users/users.module.js';
 import { AuthModule } from './auth/auth.module.js';
+import { DepartmentsModule } from './departments/departments.module.js';
+import { RolesGuard } from './common/guards/roles.guard.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -23,8 +25,9 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     }),
     UsersModule,
     AuthModule,
+    DepartmentsModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, RolesGuard],
 })
 export class AppModule {}
