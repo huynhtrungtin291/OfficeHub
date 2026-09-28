@@ -25,9 +25,8 @@ export class CreateUserDto {
   @IsEnum(['admin', 'manager', 'employee'])
   role?: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  @MaxLength(100)
   department: string;
 
   @IsNotEmpty()

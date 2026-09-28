@@ -6,6 +6,7 @@ import { UsersService } from './users.service.js';
 import { UsersController } from './users.controller.js';
 import { User, UserSchema } from './schema/users.schema.js';
 import { AuthGuard } from '../common/guards/auth.guard.js';
+import { RolesGuard } from '../common/guards/roles.guard.js';
 
 
 @Module({
@@ -14,7 +15,7 @@ import { AuthGuard } from '../common/guards/auth.guard.js';
     JwtModule
   ],
   controllers: [UsersController],
-  providers: [UsersService, AuthGuard],
+  providers: [UsersService, AuthGuard, RolesGuard],
   exports: [UsersService],
 })
 export class UsersModule {}

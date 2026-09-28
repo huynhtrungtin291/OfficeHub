@@ -43,6 +43,18 @@ export class UsersService {
     };
   }
 
+  async deleteUsers(email:string): Promise<object>{
+    const user = await this.userModel.findOneAndDelete({ email });
+    if (!user) {
+      throw new Error('Người dùng không tồn tại');
+    }
+    return {
+      statusCode: 200,
+      message: 'Xóa tài khoản người dùng thành công',
+      data: user,
+    };
+  }
+
   async isUserExists(email: string): Promise<boolean> {
     if (!email) return false;
     const result = await this.userModel.exists({ email });
@@ -88,5 +100,15 @@ export class UsersService {
     const hashedNewPassword = await bcrypt.hash(updatePasswordDto.newPassword, 10);
     await this.userModel.findByIdAndUpdate(user._id, { password: hashedNewPassword });
   }
+
+  async isUserManager(_id: string): Promise<boolean> {
+    const user = await this.userModel.findOne({ _id }).exec();  
+    return user?.role === 'manager';
+  }
+
+  async getUserIdByEmail(email: string): Promise<string | null> {
+    const user = await this.userModel.findOne({ email }).exec();
+    return user ? user._id.toString() : null; 
+  } 
 
 }
