@@ -17,4 +17,12 @@ export class DepartmentsController {
   async createDepartment(@Body() createDepartmentDto: CreateDepartmentDto) {
     return this.departmentsService.createDepartment(createDepartmentDto);
   }
+
+
+  @Roles(Role.ADMIN, Role.MANAGER)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Post('add-member')
+  async addMemberToDepartment(@Body() { departmentCode, email }: { departmentCode: string; email: string }) {
+    return this.departmentsService.addMemberToDepartment(departmentCode, email);
+  }
 }

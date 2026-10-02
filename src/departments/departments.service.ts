@@ -74,10 +74,7 @@ export class DepartmentsService {
     };
   }
 
-  async addMemberToDepartment(
-    departmentCode: string,
-    email: string,
-  ): Promise<object> {
+  async addMemberToDepartment(departmentCode: string, email: string, ): Promise<object> {
     const department = await this.departmentModel.findOne({
       departmentCode: departmentCode,
     });

@@ -20,6 +20,9 @@ export class Department {
   @Prop({ type: 'ObjectId', ref: 'User' })
   manager: Types.ObjectId | null;
 
+  @Prop({ type: 'ObjectId', ref: 'Conversation' })
+  conversationId: Types.ObjectId | null;
+
 
 }
 
