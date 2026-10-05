@@ -16,6 +16,11 @@ interface JwtPayload {
     status: string;
     
 }
+
+export interface TokenResponse {
+    accessToken: string;
+    refreshToken: string;
+}
 @Injectable()
 export class AuthService {
     constructor(
@@ -42,7 +47,7 @@ export class AuthService {
         };
     }
 
-    async generateTokens(user: any): Promise<object> {
+    async generateTokens(user: any): Promise<TokenResponse> {
         const payload: JwtPayload = {
             _id: user._id.toString(),
             fullName: user.fullName,

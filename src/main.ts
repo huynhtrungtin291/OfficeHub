@@ -8,7 +8,13 @@ declare global {
 }
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  
+  const app = await NestFactory.create(AppModule, {
+    cookies: {
+      secret: process.env.COOKIE_SECRET,
+    },
+  });
+
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,
     transform: true,
